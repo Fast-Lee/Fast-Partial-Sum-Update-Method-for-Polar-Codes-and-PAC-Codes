@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Copyright (c) 2026.3, XXXXXX & XXXXXX
+% Copyright (c) 2026.3, Xun Li
 % All rights reserved.
 %
 % Redistribution and use in source and binary forms, with or without 
@@ -9,13 +9,11 @@
 % Freely distributed for educational and research purposes.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Proposed FPSU SCD for PAC Codes.
-
 classdef FPSU_PAC
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties
         N                   % code length
-        K                   % info length 
+        K                   % info length
         gen                 % convolutional generator polynomial
         rate                
         rate_profiling      
@@ -79,8 +77,7 @@ classdef FPSU_PAC
             x = mod(u*obj.GN, 2)';
         end
         
-        function [d_esti, total_num_of_PS_update] = SC_decoder(obj, LLR, M)
-            total_num_of_PS_update = 0;
+        function [d_esti] = SC_decoder(obj, LLR, M)
             % calculate LLR RAM depth.
             DEPTH = 0;
             i = 1;
@@ -210,13 +207,11 @@ classdef FPSU_PAC
                 if i == obj.N/2
                     PS_RAM = zeros(obj.N/M/2, M);
                     PS_RAM(1, :) = bit_and;
-                    total_num_of_PS_update = total_num_of_PS_update + M;
                 else
                     j = mod(floor(i / M), obj.N/M/2);
                     while (u_hat ~= 0)
                         Ram_Val = PS_RAM(j + 1, :);
                         PS_RAM(j + 1, :) = xor(Ram_Val, bit_and);
-                        total_num_of_PS_update = total_num_of_PS_update + M;
                         if j == 0
                             break;
                         end

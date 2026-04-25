@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Copyright (c) 2026.3, XXXXXX & XXXXXX
+% Copyright (c) 2026.3, Xun Li
 % All rights reserved.
 %
 % Redistribution and use in source and binary forms, with or without 
@@ -28,7 +28,7 @@ EbNo_vec = 1:0.5:3.5; % we have loop for different SNR values
 K = 64;
 N = 128;
 R = K/N;
-L = 16;
+L = 4;
 M = 64;
 load 'QWI.mat';
 
@@ -37,7 +37,6 @@ load 'QWI.mat';
 Fer = zeros(1,length(EbNo_vec)); % Frame error rate for each SNR
 FE = zeros(1,length(EbNo_vec));  % #of frames in errors
 Nruns = zeros(1,length(EbNo_vec)); % #of actual runs
-total_num_of_ps_update = zeros(1, length(EbNo_vec));
 maxRun = 1e9;
 
 ClustNum = [500 500 1000 5000*(ones(1,length(EbNo_vec)-3))]; % adjust this based on N and K
@@ -50,7 +49,6 @@ for EbNo_count = 1:length(EbNo_vec)
     EbNo = 10^(EbNo_dB/10);
     sigma = 1/sqrt(2*R*EbNo);
     Nblkerrs = 0;
-    tot_num_of_ps_upd = 0;
     
     fprintf('[%02d:%02d] Starting! SNR = %.2f\n',0, 0, EbNo_dB);
     for i = 1:maxRun/ClustNum(EbNo_count)
@@ -66,8 +64,7 @@ for EbNo_count = 1:length(EbNo_vec)
             % AWGN
             r = modulated + randn(1,N)*sigma;
             % Decoding
-            [d_esti, ~, ~, ~] = obj.FPSU_Polar_SCL(r, L, M);
-            tot_num_of_ps_upd = tot_num_of_ps_upd + 0;
+            [d_esti] = obj.FPSU_Polar_SCL(r, L, M);
             Nblkerrs = Nblkerrs + any(d_esti~=msg);
         end
         if Nblkerrs >= maxFE
@@ -90,7 +87,6 @@ for EbNo_count = 1:length(EbNo_vec)
     Nruns(EbNo_count) = temp;
     Fer(EbNo_count) = Nblkerrs/temp;
     FE(EbNo_count) = Nblkerrs;
-    total_num_of_ps_update(EbNo_count) = tot_num_of_ps_upd;
     fprintf('-------------------------------------\n');
 end
 
@@ -100,7 +96,6 @@ rng(s);     % Restore RNG
 res.trials = Nruns;
 res.frame_errors = FE;
 res.FER = FE./Nruns;
-res.average_num_of_ps_update = total_num_of_ps_update ./ Nruns;
 res.SNR = EbNo_vec;
 res.K = K;
 res.max_trials = maxRun;

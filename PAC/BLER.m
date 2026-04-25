@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Copyright (c) 2026.3, XXXXXX & XXXXXX
+% Copyright (c) 2026.3, Xun Li
 % All rights reserved.
 %
 % Redistribution and use in source and binary forms, with or without 
@@ -68,7 +68,7 @@ for EbNo_count = 1:length(EbNo_vec)
             % Decoding
             % d_esti = pac.SC_decoder(r')';
             M = 1;  % select M = [1,2 4,8,16, 32] for test.
-            [d_esti, ~] = pac.SC_decoder(r, M);
+            [d_esti] = pac.SC_decoder(r, M);
             Nblkerrs = Nblkerrs + any(d_esti~=msg);
         end
         if Nblkerrs >= maxFE

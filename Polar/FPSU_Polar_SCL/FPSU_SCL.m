@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Copyright (c) 2026.3, XXXXXX & XXXXXX
+% Copyright (c) 2026.3, Xun Li
 % All rights reserved.
 %
 % Redistribution and use in source and binary forms, with or without 
@@ -51,8 +51,7 @@ classdef FPSU_SCL
         end
 
         % FPSU polar SCL decoding
-        function [d_esti, PM_best, U_list, total_number_of_ps_update] = FPSU_Polar_SCL(obj, llr, L, M)
-            total_number_of_ps_update = 0;
+        function [d_esti, PM_best, U_list] = FPSU_Polar_SCL(obj, llr, L, M)
             B_RAM = zeros(1, obj.N);
             B_RAM(obj.rate_profiling) = 1;
             % Same LLR RAM depth rule as the verified FPSU_SC
@@ -163,8 +162,7 @@ classdef FPSU_SCL
                     if ~active_path(l_index)
                         continue;
                     end
-                    [PS_RAM(:,:,l_index), num] = obj.FPSU_path(PS_RAM(:,:,l_index), chosen_bit(l_index), G, i, M);
-                    total_number_of_ps_update = total_number_of_ps_update + num;
+                    [PS_RAM(:,:,l_index)] = obj.FPSU_path(PS_RAM(:,:,l_index), chosen_bit(l_index), G, i, M);
                 end
                 G = xor([0 G(1:end - 1)], G);
             end
@@ -225,13 +223,11 @@ classdef FPSU_SCL
             end
         end
     
-        function [PS_RAM_path, total_number_of_ps_update] = FPSU_path(obj, PS_RAM_path, bit, G, i, M)
-            total_number_of_ps_update = 0;
+        function [PS_RAM_path] = FPSU_path(obj, PS_RAM_path, bit, G, i, M)
             bit_and = and(repmat(bit, 1, M), G);
             if i == obj.N/2
                 PS_RAM_path(:,:) = 0;
                 PS_RAM_path(1,:) = bit_and;
-                total_number_of_ps_update = total_number_of_ps_update + M;
                 return;
             end
             if bit == 0
@@ -241,7 +237,6 @@ classdef FPSU_SCL
             j = j0;
             while true
                 PS_RAM_path(j + 1, :) = xor(PS_RAM_path(j + 1, :), bit_and);
-                total_number_of_ps_update = total_number_of_ps_update + M;
                 if j == 0
                     break;
                 end

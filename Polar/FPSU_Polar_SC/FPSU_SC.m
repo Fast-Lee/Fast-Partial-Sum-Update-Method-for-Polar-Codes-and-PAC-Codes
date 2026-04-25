@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Copyright (c) 2026.3, XXXXXX & XXXXXX
+% Copyright (c) 2026.3, Xun Li
 % All rights reserved.
 %
 % Redistribution and use in source and binary forms, with or without 
@@ -8,8 +8,6 @@
 % and te redistribtuion condition.
 % Freely distributed for educational and research purposes.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Proposed FPSU SCD for Polar Codes.
 
 classdef FPSU_SC
 
@@ -77,8 +75,7 @@ classdef FPSU_SC
             x = mod(u * G_N, 2);
         end
         
-        function [U_hat, X_hat, total_num_of_ps_update] = polar_SCD(obj, llr, M)
-            total_num_of_ps_update = 0;
+        function [U_hat, X_hat] = polar_SCD(obj, llr, M)
             B_RAM = obj.setB();
             % calculate LLR RAM depth.
             DEPTH = FPSU_SC.get_llr_ram_depth(obj.N, M);
@@ -169,13 +166,11 @@ classdef FPSU_SC
                     xl = reshape(PS_RAM', 1, []);
                     PS_RAM = zeros(obj.N/M/2, M);
                     PS_RAM(1, :) = bit_and;
-                    total_num_of_ps_update = total_num_of_ps_update + 1;
                 else
                     j = mod(floor(i / M), obj.N/M/2);
                     while (bit ~= 0)
                         Ram_Val = PS_RAM(j + 1, :);
                         PS_RAM(j + 1, :) = xor(Ram_Val, bit_and);
-                        total_num_of_ps_update = total_num_of_ps_update + 1;
                         if j == 0
                             break;
                         end

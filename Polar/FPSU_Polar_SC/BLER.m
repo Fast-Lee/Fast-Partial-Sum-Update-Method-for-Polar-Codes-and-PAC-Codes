@@ -1,3 +1,14 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright (c) 2026.3, Xun Li
+% All rights reserved.
+%
+% Redistribution and use in source and binary forms, with or without 
+% modification, are permitted provided that:
+% the source code retains the above copyright notice, 
+% and te redistribtuion condition.
+% Freely distributed for educational and research purposes.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear; clc; close all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,7 +38,6 @@ R = K/N;
 Fer = zeros(1,length(EbNo_vec)); % Frame error rate for each SNR
 FE = zeros(1,length(EbNo_vec));  % #of frames in errors
 Nruns = zeros(1,length(EbNo_vec)); % #of actual runs
-total_num_of_ps_update = zeros(1, length(EbNo_vec));
 maxRun = 1e9;
 
 ClustNum = [5000 5000 5000 5e3*(ones(1,length(EbNo_vec)-3))]; % adjust this based on N and K
@@ -40,11 +50,9 @@ for EbNo_count = 1:length(EbNo_vec)
     EbNo = 10^(EbNo_dB/10);
     sigma = 1/sqrt(2*R*EbNo);
     Nblkerrs = 0;
-    tot_num_of_ps_upd = 0;
 
     fprintf('[%02d:%02d] Starting! SNR = %.2f\n',0, 0, EbNo_dB);
     for i = 1:maxRun/ClustNum(EbNo_count)
-        
         parfor j = 1:ClustNum(EbNo_count)
             %Generate random message
             msg = randi([0 1], 1, K);
@@ -56,8 +64,7 @@ for EbNo_count = 1:length(EbNo_vec)
             % AWGN
             r = modulated + randn(1,N)*sigma;
             % Decoding
-            [U_hat, X_hat, num] = obj.polar_SCD(r, M);
-            tot_num_of_ps_upd = tot_num_of_ps_upd + num;
+            [U_hat, X_hat] = obj.polar_SCD(r, M);
             Nblkerrs = Nblkerrs + any(X_hat~=x);
         end
         if Nblkerrs >= maxFE
@@ -80,7 +87,6 @@ for EbNo_count = 1:length(EbNo_vec)
     Nruns(EbNo_count) = temp;
     Fer(EbNo_count) = Nblkerrs/temp;
     FE(EbNo_count) = Nblkerrs;
-    total_num_of_ps_update(EbNo_count) = tot_num_of_ps_upd;
     fprintf('-------------------------------------\n');
 end
 
@@ -90,8 +96,6 @@ rng(s);     % Restore RNG
 res.trials = Nruns;
 res.frame_errors = FE;
 res.FER = FE./Nruns;
-res.average_num_of_ps_update = total_num_of_ps_update ./ Nruns;
-
 res.SNR = EbNo_vec;
 res.K = K;
 res.delta = delta;
