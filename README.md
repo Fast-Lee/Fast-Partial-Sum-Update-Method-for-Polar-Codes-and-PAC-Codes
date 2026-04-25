@@ -11,7 +11,7 @@ The project mainly includes:
 
 ## Overview
 
-The proposed FPSU algorithm reduces redundant partial-sum updates during decoding by exploiting the structural properties of Polar and PAC codes. This project evaluates both decoding performance and partial-sum update complexity, and compares the proposed FPSU-based decoders with conventional decoding methods.
+The proposed FPSU algorithm reduces redundant partial-sum updates during decoding by exploiting the structural properties of Polar and PAC codes. 
 
 ## Citation
 
