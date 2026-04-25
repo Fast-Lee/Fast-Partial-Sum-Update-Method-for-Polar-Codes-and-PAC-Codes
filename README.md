@@ -1,5 +1,6 @@
 # Fast Partial-Sum Update Method for Polar Codes and PAC Codes
 
+## ⭐⭐⭐⭐⭐⭐ For Future. For Space. For Moon. ⭐⭐⭐⭐⭐⭐
 This repository implements the proposed **Fast Partial-Sum Update (FPSU)** algorithm for Polar codes and PAC codes.
 
 The project mainly includes:
@@ -16,13 +17,4 @@ The proposed FPSU algorithm reduces redundant partial-sum updates during decodin
 
 ## Citation
 
-If you find this algorithm or implementation useful for your research, please cite our paper:
-
-```bibtex
-@article{li2026fpsu,
-  title   = {Fast Partial-Sum Update Method for Polar Codes and PAC Codes},
-  author  = {Li, Xun},
-  journal = {IEEE Communications Letters},
-  year    = {2026},
-  doi     = {10.1109/LCOMM.2026.3683509}
-}
+If you find this algorithm or implementation useful for your research, please cite our paper. DOI: 10.1109/LCOMM.2026.3683509
