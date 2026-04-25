@@ -6,7 +6,7 @@ This repository implements the proposed **Fast Partial-Sum Update (FPSU)** algor
 The project mainly includes:
 
 - FPSU-based Polar Successive Cancellation Decoding, FPSU Polar SCD
-- FPSU-based Polar List Successive Cancellation Decoding, FPSU PAC SCL
+- FPSU-based Polar List Successive Cancellation Decoding, FPSU Polar SCL
 - FPSU-based PAC Successive Cancellation Decoding, FPSU PAC SCD
 
 ## Overview
